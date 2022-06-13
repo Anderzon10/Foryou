@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hello</title>
+    <link rel="stylesheet" href="/Foryou/prueba6/styles6.css">
+    
+</head>
+<body>
+    <canvas></canvas>
+    <h1 style="text-align: center; color: #1d3557; font-family: Cochin ">Hi</h1>
+    <h4 style="color: #8e9aaf; margin: 55px;">Que tal? Wow, la verdad que me parece loco lo que hemos pasado y hecho, la verdad que todo el tiempo que he pasado contigo me parecio algo muy especial e único,
+    nada de lo que he hecho ni he vivido se compara con ello, mediante estos dos meses que he pasado contigo me he dado cuenta de que eres una muchisimo mejor persona de lo que creía, además de tu forma de actuar y tu pasión por los animales.
+    <br>
+    <br>
+    Me gustan mucho tus ojitos, nariz, tu cabello, tu cuerpo y tu bonita sonrisa. Me estas volviendo loco, realmente me estás volviendo loco y eso está bien para mi, mientras estes a mi lado siempre te voy a querer como desde el principio, aunque 
+    a veces no lo demuestro, en mi mente te quiero y te amo muchisimo más de lo que piensas, yo te quiero como eres y tu quiéreme como soy, aunque alguien intente separarnos u romper nuestra relación, yo se que no lo podrá hacer ya que Dios esta de nuestro camino y
+    ninguna otra cosa va a poder romper aquello.
+    <br>
+    <br>
+    Me parece muy lindo cuando me llamas de una manera especial porque eso es como me haces sentir, alguien especial, quiero decirte que de verdad te quiero como nunca he querido a alguien, de una forma muy bonita y diferente que de verdad no tengo palabras para describirtelo,
+    por ello es que me siento muy bien y a gusto contigo, cada momento y minuto lo disfruto muy bien aunque a veces no lo parezca, tu carita y sonrisa son aquellas cosas favoritas que me encantan ver en mi día a día.
+    <br>
+    <br>
+    Siento que eres aquella persona con la quisiera compartir momentos únicos e inigualables en mi vida, cada sueño u pensamiento que tengo contigo siempre espero que se cumpla, desde chiquito siempre he tenido un interés en conocerte más y poder llegar a hacer algo, por lo que
+    ahora eso es ya un sueño cumplido, me gustaría que tengas toda tu confianza dispuesta en mi, sin miedo ni temores, eres aquella niña que solo me interesas, mis ojos solo están para verte a tí, para verte sonreir, y a pesar de todos los problemas que tenemos siento que somos
+    pareja muy fuerte que estamos en un momento muy bonito e inexplicable de nuestra relación que no quiero que cambie nunca más.
+    <br>
+    <br>
+    Tu forma de ser, celosa, timida, amigable, amable, engreida jajajjaja, lo hace demasiado diferentes a otras niñas "del común" y por ello es que fue desde el principio que fue que me llamaste la atención, encima que eres super linda en el como eres físicamente que me dan ganas 
+    de agarrarte a besos sin importar en el lugar en donde estemos.
+    <br>
+    <br>
+    A veces creo que no soy lo suficientemente bueno para ti, por ello siempre trato de sacar mi mejor parte, la parte amigable, tranquila, pura y amorosa que solo está dispuesta para ti y no tiene comparación con el como soy de aburrido en verdad, te amo muchisimo y espero que lo 
+    entiendas, prometo siempre serte fiel y no mirar ni enteresarme en otras niñas, ya que como te había dicho anteriormente, mi amor, estos ojitos solo están dispuesto para ti.
+    </h4>
+
+    <h3 style="text-align:center; color:#1d3557">Te amo mi bb</h3>
+    
+</body>
+
+<script>
+    const STAR_COLOR = '#fff';
+const STAR_SIZE = 3;
+const STAR_MIN_SCALE = 0.2;
+const OVERFLOW_THRESHOLD = 50;
+const STAR_COUNT = ( window.innerWidth + window.innerHeight ) / 8;
+
+const canvas = document.querySelector( 'canvas' ),
+      context = canvas.getContext( '2d' );
+
+let scale = 1, // device pixel ratio
+    width,
+    height;
+
+let stars = [];
+
+let pointerX,
+    pointerY;
+
+let velocity = { x: 0, y: 0, tx: 0, ty: 0, z: 0.0005 };
+
+let touchInput = false;
+
+generate();
+resize();
+step();
+
+window.onresize = resize;
+canvas.onmousemove = onMouseMove;
+canvas.ontouchmove = onTouchMove;
+canvas.ontouchend = onMouseLeave;
+document.onmouseleave = onMouseLeave;
+
+function generate() {
+
+   for( let i = 0; i < STAR_COUNT; i++ ) {
+    stars.push({
+      x: 0,
+      y: 0,
+      z: STAR_MIN_SCALE + Math.random() * ( 1 - STAR_MIN_SCALE )
+    });
+   }
+
+}
+
+function placeStar( star ) {
+
+  star.x = Math.random() * width;
+  star.y = Math.random() * height;
+
+}
+
+function recycleStar( star ) {
+
+  let direction = 'z';
+
+  let vx = Math.abs( velocity.x ),
+	    vy = Math.abs( velocity.y );
+
+  if( vx > 1 || vy > 1 ) {
+    let axis;
+
+    if( vx > vy ) {
+      axis = Math.random() < vx / ( vx + vy ) ? 'h' : 'v';
+    }
+    else {
+      axis = Math.random() < vy / ( vx + vy ) ? 'v' : 'h';
+    }
+
+    if( axis === 'h' ) {
+      direction = velocity.x > 0 ? 'l' : 'r';
+    }
+    else {
+      direction = velocity.y > 0 ? 't' : 'b';
+    }
+  }
+  
+  star.z = STAR_MIN_SCALE + Math.random() * ( 1 - STAR_MIN_SCALE );
+
+  if( direction === 'z' ) {
+    star.z = 0.1;
+    star.x = Math.random() * width;
+    star.y = Math.random() * height;
+  }
+  else if( direction === 'l' ) {
+    star.x = -OVERFLOW_THRESHOLD;
+    star.y = height * Math.random();
+  }
+  else if( direction === 'r' ) {
+    star.x = width + OVERFLOW_THRESHOLD;
+    star.y = height * Math.random();
+  }
+  else if( direction === 't' ) {
+    star.x = width * Math.random();
+    star.y = -OVERFLOW_THRESHOLD;
+  }
+  else if( direction === 'b' ) {
+    star.x = width * Math.random();
+    star.y = height + OVERFLOW_THRESHOLD;
+  }
+
+}
+
+function resize() {
+
+  scale = window.devicePixelRatio || 1;
+
+  width = window.innerWidth * scale;
+  height = window.innerHeight * scale;
+
+  canvas.width = width;
+  canvas.height = height;
+
+  stars.forEach( placeStar );
+
+}
+
+function step() {
+
+  context.clearRect( 0, 0, width, height );
+
+  update();
+  render();
+
+  requestAnimationFrame( step );
+
+}
+
+function update() {
+
+  velocity.tx *= 0.96;
+  velocity.ty *= 0.96;
+
+  velocity.x += ( velocity.tx - velocity.x ) * 0.8;
+  velocity.y += ( velocity.ty - velocity.y ) * 0.8;
+
+  stars.forEach( ( star ) => {
+
+    star.x += velocity.x * star.z;
+    star.y += velocity.y * star.z;
+
+    star.x += ( star.x - width/2 ) * velocity.z * star.z;
+    star.y += ( star.y - height/2 ) * velocity.z * star.z;
+    star.z += velocity.z;
+  
+    // recycle when out of bounds
+    if( star.x < -OVERFLOW_THRESHOLD || star.x > width + OVERFLOW_THRESHOLD || star.y < -OVERFLOW_THRESHOLD || star.y > height + OVERFLOW_THRESHOLD ) {
+      recycleStar( star );
+    }
+
+  } );
+
+}
+
+function render() {
+
+  stars.forEach( ( star ) => {
+
+    context.beginPath();
+    context.lineCap = 'round';
+    context.lineWidth = STAR_SIZE * star.z * scale;
+    context.globalAlpha = 0.5 + 0.5*Math.random();
+    context.strokeStyle = STAR_COLOR;
+
+    context.beginPath();
+    context.moveTo( star.x, star.y );
+
+    var tailX = velocity.x * 2,
+        tailY = velocity.y * 2;
+
+    // stroke() wont work on an invisible line
+    if( Math.abs( tailX ) < 0.1 ) tailX = 0.5;
+    if( Math.abs( tailY ) < 0.1 ) tailY = 0.5;
+
+    context.lineTo( star.x + tailX, star.y + tailY );
+
+    context.stroke();
+
+  } );
+
+}
+
+function movePointer( x, y ) {
+
+  if( typeof pointerX === 'number' && typeof pointerY === 'number' ) {
+
+    let ox = x - pointerX,
+        oy = y - pointerY;
+
+    velocity.tx = velocity.tx + ( ox / 8*scale ) * ( touchInput ? 1 : -1 );
+    velocity.ty = velocity.ty + ( oy / 8*scale ) * ( touchInput ? 1 : -1 );
+
+  }
+
+  pointerX = x;
+  pointerY = y;
+
+}
+
+function onMouseMove( event ) {
+
+  touchInput = false;
+
+  movePointer( event.clientX, event.clientY );
+
+}
+
+function onTouchMove( event ) {
+
+  touchInput = true;
+
+  movePointer( event.touches[0].clientX, event.touches[0].clientY, true );
+
+  event.preventDefault();
+
+}
+
+function onMouseLeave() {
+
+  pointerX = null;
+  pointerY = null;
+
+}
+</script>
+</html>

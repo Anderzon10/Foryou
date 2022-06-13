@@ -1,0 +1,1 @@
+const words = ['Princesa', 'Hermosa', 'Mia', 'Silence', 'Bella', 'Bomboncito', 'Florecita', 'Guapa', 'Traviesa', 'Muñeca', 'Celosita', 'Cariño'];
